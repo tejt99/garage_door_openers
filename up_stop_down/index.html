@@ -71,30 +71,30 @@
 				return params;
 			}
 
-			function sendMsg(message) {
-				const params = getUrlParams();
-				console.log(params);
+			const params = getUrlParams();
+			console.log(params);
 
-				const brokerUrl = params['brokerUrl'];
-				const login = params['login'];
-				const password = params['password'];
-				const topic = params['topic'];
-				message = message + params['code']
+			const brokerUrl = params['brokerUrl'];
+			const login = params['login'];
+			const password = params['password'];
+			const topic = params['topic'];
+			message = message + params['code']
 
-				if (!brokerUrl || !login || !password || !topic) {
-					console.error("Missing URL parameters");
-					return;
-				}
+			if (!brokerUrl || !login || !password || !topic) {
+				console.error("Missing URL parameters");
+				return;
+			}
 
-				const options = {
-					username: login,
-					password: password
-				};
+			const options = {
+				username: login,
+				password: password
+			};
 
-				const client = mqtt.connect(brokerUrl, options);
+			const client = mqtt.connect(brokerUrl, options);
 
-				client.on('connect', function () {
-					console.log('Connected to broker');
+			client.on('connect', function () {
+				console.log('Connected to broker');
+				function sendMsg(message) {
 					client.publish(topic, message, function (err) {
 						if (err) {
 							console.error('Error publishing message:', err);
@@ -103,12 +103,12 @@
 						}
 						client.end();
 					});
-				});
+				};
+			});
 
-				client.on('error', function (err) {
-					console.error('Connection error:', err);
-				});
-			}
+			client.on('error', function (err) {
+				console.error('Connection error:', err);
+			});
 
 			// Example usage:
 			// Assuming URL: http://example.com?brokerUrl=wss://test.mosquitto.org:8081&login=user&password=pass&code=SECRET&topic=test/topic
