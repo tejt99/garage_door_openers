@@ -1,0 +1,14 @@
+{
+  "name": "Garage Door",
+  "short_name": "Garage Door",
+  "theme_color": "#f0f0f0",
+  "background_color": "#f0f0f0",
+  "display": "standalone",
+  "scope": "/",
+  "description": "Up,stop,down Garage Door opener",
+  "orientation": "any",
+  "icons": [{
+    "src": "https://gcdnb.pbrd.co/images/yLMUClCkM5xR.png",
+    "sizes": "1024x1024"
+  }]
+}

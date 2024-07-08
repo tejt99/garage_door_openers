@@ -1,0 +1,119 @@
+<!doctypehtml>
+<html lang=en>
+	<meta charset=UTF-8>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+	<head>
+		<link rel="manifest" href="/manifest.json">
+		<title>Garage Door</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				overflow: hidden
+			}
+
+			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				margin: 0;
+				background-color: #f0f0f0
+			}
+
+			.triangle-down,
+			.triangle-up {
+				width: 0;
+				height: 0;
+				border-left: 50px solid transparent;
+				border-right: 50px solid transparent
+			}
+
+			.triangle-up {
+				border-bottom: 86.6px solid green;
+				margin-bottom: 40px
+			}
+
+			.triangle-down {
+				border-top: 86.6px solid green;
+				margin-top: 40px;
+				margin-bottom: 14vh;
+			}
+
+			.stop-button {
+				width: 100px;
+				height: 100px;
+				background-color: red;
+				border: none;
+				border-radius: 50%;
+				margin: 20px 0
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<div class=triangle-up onclick='sendMsg("UP")'></div>
+		<div class=stop-button onclick='sendMsg("STOP")'></div>
+		<div class=triangle-down onclick="sendMsg('DOWN')"></div>
+
+		<script>
+			function getUrlParams() {
+				const params = {};
+				window.location.search.substring(1).split("&").forEach(param => {
+					const [key, value] = param.split("=");
+					params[key] = decodeURIComponent(value);
+				});
+				return params;
+			}
+
+			function sendMsg(message) {
+				const params = getUrlParams();
+
+				const brokerUrl = params['brokerUrl'];
+				const login = params['login'];
+				const password = params['password'];
+				const topic = params['topic'];
+				message = message + params['code']
+
+				if (!brokerUrl || !login || !password || !topic) {
+					console.error("Missing URL parameters");
+					return;
+				}
+
+				const options = {
+					username: login,
+					password: password
+				};
+
+				const client = mqtt.connect(brokerUrl, options);
+
+				client.on('connect', function () {
+					console.log('Connected to broker');
+					client.publish(topic, message, function (err) {
+						if (err) {
+							console.error('Error publishing message:', err);
+						} else {
+							console.log('Message published successfully');
+						}
+						client.end();
+					});
+				});
+
+				client.on('error', function (err) {
+					console.error('Connection error:', err);
+				});
+			}
+
+			// Example usage:
+			// Assuming URL: http://example.com?brokerUrl=wss://test.mosquitto.org:8081&login=user&password=pass&code=SECRET&topic=test/topic
+			// sendMsg("Hello, MQTT!");
+
+		</script>
+
+	</body>
+
+</html>
