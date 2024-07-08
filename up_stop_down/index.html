@@ -78,7 +78,6 @@
 			const login = params['login'];
 			const password = params['password'];
 			const topic = params['topic'];
-			message = message + params['code']
 
 			if (brokerUrl && login && password && topic) {
 				const options = {
@@ -91,6 +90,7 @@
 				client.on('connect', function () {
 					console.log('Connected to broker');
 					function sendMsg(message) {
+						message = message + params['code']
 						client.publish(topic, message, function (err) {
 							if (err) {
 								console.error('Error publishing message:', err);
