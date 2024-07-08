@@ -95,7 +95,7 @@
 			});
 
 			function sendMsg(message) {
-				message = message + params['code']
+				message = message +'/'+ params['code']
 				client.publish(topic, message, function (err) {
 					if (err) {
 						console.error('Error publishing message:', err);
