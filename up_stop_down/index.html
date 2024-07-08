@@ -79,22 +79,20 @@
 			const password = params['password'];
 			const topic = params['topic'];
 
-			if (brokerUrl && login && password && topic) {
-				const options = {
-					username: login,
-					password: password
-				};
-
-				const client = mqtt.connect(brokerUrl, options);
-
-				client.on('connect', function () {
-					console.log('Connected to broker');
-				});
-
-				client.on('error', function (err) {
-					console.error('Connection error:', err);
-				});
+			const options = {
+				username: login,
+				password: password
 			};
+
+			const client = mqtt.connect(brokerUrl, options);
+
+			client.on('connect', function () {
+				console.log('Connected to broker');
+			});
+
+			client.on('error', function (err) {
+				console.error('Connection error:', err);
+			});
 
 			function sendMsg(message) {
 				message = message + params['code']
