@@ -80,39 +80,36 @@
 			const topic = params['topic'];
 			message = message + params['code']
 
-			if (!brokerUrl || !login || !password || !topic) {
-				console.error("Missing URL parameters");
-				return;
-			}
+			if (brokerUrl && login && password && topic) {
+				const options = {
+					username: login,
+					password: password
+				};
 
-			const options = {
-				username: login,
-				password: password
+				const client = mqtt.connect(brokerUrl, options);
+
+				client.on('connect', function () {
+					console.log('Connected to broker');
+					function sendMsg(message) {
+						client.publish(topic, message, function (err) {
+							if (err) {
+								console.error('Error publishing message:', err);
+							} else {
+								console.log('Message published successfully');
+							}
+							client.end();
+						});
+					};
+				});
+
+				client.on('error', function (err) {
+					console.error('Connection error:', err);
+				});
 			};
 
-			const client = mqtt.connect(brokerUrl, options);
-
-			client.on('connect', function () {
-				console.log('Connected to broker');
-				function sendMsg(message) {
-					client.publish(topic, message, function (err) {
-						if (err) {
-							console.error('Error publishing message:', err);
-						} else {
-							console.log('Message published successfully');
-						}
-						client.end();
-					});
-				};
-			});
-
-			client.on('error', function (err) {
-				console.error('Connection error:', err);
-			});
-
-			// Example usage:
-			// Assuming URL: http://example.com?brokerUrl=wss://test.mosquitto.org:8081&login=user&password=pass&code=SECRET&topic=test/topic
-			// sendMsg("Hello, MQTT!");
+// Example usage:
+// Assuming URL: http://example.com?brokerUrl=wss://test.mosquitto.org:8081&login=user&password=pass&code=SECRET&topic=test/topic
+// sendMsg("Hello, MQTT!");
 
 		</script>
 
