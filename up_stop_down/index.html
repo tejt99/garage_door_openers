@@ -4,7 +4,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
 	<head>
-		<link rel="manifest" href="/manifest.json">
+		<link rel="manifest" href="manifest.json">
 		<title>Garage Door</title>
 		<style>
 			html,
@@ -53,6 +53,7 @@
 			}
 
 		</style>
+		<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 	</head>
 
 	<body>
@@ -72,6 +73,7 @@
 
 			function sendMsg(message) {
 				const params = getUrlParams();
+				console.log(params);
 
 				const brokerUrl = params['brokerUrl'];
 				const login = params['login'];
